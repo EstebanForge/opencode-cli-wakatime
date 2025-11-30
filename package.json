@@ -1,0 +1,29 @@
+{
+  "name": "opencode-cli-wakatime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "release": "zip -r opencode-cli-wakatime.zip .opencode/plugin/wakatime.ts .opencode/opencode.jsonc package.json README.md LICENSE.md install.sh"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-cli",
+    "opencode-plugin",
+    "wakatime",
+    "wakapi"
+  ],
+  "author": "EstebanForge <esteban@attitude.cl>",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.0.122",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
+  }
+}

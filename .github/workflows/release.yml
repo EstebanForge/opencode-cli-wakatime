@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Get version from tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Detected version: $VERSION"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Package Release
+        run: npm run release
+
+      - name: Create Release Notes
+        run: |
+          {
+            echo "### Installation"
+            echo ""
+            echo "**Quick Install:**"
+            echo "\`\`\`bash"
+            echo "curl -fsSL https://raw.githubusercontent.com/EstebanForge/opencode-cli-wakatime/main/install.sh | bash"
+            echo "\`\`\`"
+            echo ""
+            echo "**Manual Install:**"
+            echo "1. Download \`opencode-cli-wakatime.zip\` below."
+            echo "2. Unzip it."
+            echo "3. Run \`./install.sh\`."
+            echo "4. Restart OpenCode."
+            echo ""
+          } > release_notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.VERSION }}
+          name: OpenCode WakaTime Plugin ${{ env.VERSION }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          files: |
+            opencode-cli-wakatime.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
